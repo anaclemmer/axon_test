@@ -2,7 +2,7 @@
 By: Ana Clemmer
 ---
 
-This project is a simple task management system with REST API, built in Rust and using axum for the HTTP server. I learned a lot throughout this project and I'm grateful for the opportunity to expand my horizons with AXON Networks even through this preliminary test!
+This project is a simple task management system with REST API, built in Rust and using axum for the HTTP server. Unfortunately I was not able to compile the project, but I completed it to the best of my ability. I learned a lot throughout this project and I'm grateful for the opportunity to expand my horizons with AXON Networks even through this preliminary test! Thank you.
 
 ## Setup Instructions
 
