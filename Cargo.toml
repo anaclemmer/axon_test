@@ -8,26 +8,35 @@ edition = "2024"
 axum = "0.8.4" #latest version
 
 #toxio for async runtime
-tokio = { version = "1", features = ["full"] } 
+tokio = { version = "1", features = ["full"] }
 
 #sqlx for database operations
-sqlx = { version = "0.8.6", features = [ "runtime-tokio", "sqlite", "macros", "uuid" ] } #runtime-tokio for use with tokio, SQLite for database, macros for compile-time checked queries
+sqlx = { version = "0.8.6", features = [
+    "chrono",
+    "runtime-tokio",
+    "sqlite",
+    "macros",
+    "uuid",
+] } #runtime-tokio for use with tokio, SQLite for database, macros for compile-time checked queries
 
 #serde for serialization
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0.68"
 
 #thiserror for error handling
-thiserror = "1.0"
+thiserror = "2.0"
 
 #chrono for timestamps
 chrono = { version = "0.4", features = ["serde"] }
 
 #validator for input validation
-validator = { version = "0.18", features = ["derive"] }
+validator = { version = "0.20", features = ["derive"] }
 
 #each task needs Unique ID
-uuid = { version = "1", features = ["v4", "serde"] } #v4 for 4-bit, serde so can be returned as json
+uuid = { version = "1", features = [
+    "v4",
+    "serde",
+] } #v4 for 4-bit, serde so can be returned as json
 
 #to load environment variables
 dotenvy = "0.15.7"
@@ -37,5 +46,5 @@ tower = "0.5"
 
 #for logging
 tracing = "0.1"
-tracing-subscriber = {version = "0.3", features = ["fmt", "env-filter"]}
+tracing-subscriber = { version = "0.3", features = ["fmt", "env-filter"] }
 hyper = "1.6.0"
