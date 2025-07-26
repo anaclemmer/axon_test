@@ -2,12 +2,15 @@ use axum::{
     http::StatusCode,
     response::{IntoResponse, Response},
 };
-use thiserror::Error;
 use sqlx::Error as SqlxError;
 use sqlx::migrate::MigrateError;
+use thiserror::Error;
 
 #[derive(Debug, Error)]
 pub enum AppError {
+    #[error("Configuration error: {0}")]
+    Config(String),
+
     #[error("Database error")]
     Sqlx(#[from] SqlxError),
 
@@ -23,23 +26,27 @@ pub enum AppError {
     #[error("Migration error: {0}")]
     Migration(#[from] MigrateError),
 
-    #[error("Parsing priority error: {0}")]
-    ParsePriority(#[from] ParsePriorityError),
-
-    #[error("Parsing status error: {0}")]
-    ParseStatus(#[from] ParseStatusError),    
+    #[error("Parsing error: {0}")]
+    ParseError(String),
 }
 
-//convert error message into http response with status code 
+impl From<Box<dyn std::error::Error>> for AppError {
+    fn from(err: Box<dyn std::error::Error>) -> Self {
+        AppError::ParseError(err.to_string())
+    }
+}
+
+//convert error message into http response with status code
 impl IntoResponse for AppError {
     fn into_response(self) -> Response {
         let status = match self {
+            AppError::Config(_) => StatusCode::INTERNAL_SERVER_ERROR,
             AppError::Sqlx(_) => StatusCode::INTERNAL_SERVER_ERROR,
             AppError::ValidationError(_) => StatusCode::BAD_REQUEST,
             AppError::NotFound => StatusCode::NOT_FOUND,
             AppError::ServerError(_) => StatusCode::INTERNAL_SERVER_ERROR,
             AppError::Migration(_) => StatusCode::INTERNAL_SERVER_ERROR,
-            AppError::ParsePriority(_) => StatusCode::BAD_REQUEST, // parsing errors usually are client errors
+            AppError::ParseError(_) => StatusCode::BAD_REQUEST,
         };
 
         (status, self.to_string()).into_response()
